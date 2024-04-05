@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Clock</title>
+<style>
+/* Your existing CSS styles */
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to right, #00C9FF, #92FE9D);
+}
+
+.container {
+  text-align: center;
+}
+
+/* New CSS styles for buttons */
+@font-face {
+  font-family: "Valorant";
+  src: url("Valorant.otf");
+}
+
+@font-face {
+  font-family: "DIN Next LT Pro Bold";
+  src: url("//db.onlinewebfonts.com/t/3a88649e176a40a6d80b395ca0ae430d.eot");
+  src: url("//db.onlinewebfonts.com/t/3a88649e176a40a6d80b395ca0ae430d.eot?#iefix")
+      format("embedded-opentype"),
+    url("//db.onlinewebfonts.com/t/3a88649e176a40a6d80b395ca0ae430d.woff2")
+      format("woff2"),
+    url("//db.onlinewebfonts.com/t/3a88649e176a40a6d80b395ca0ae430d.woff")
+      format("woff"),
+    url("//db.onlinewebfonts.com/t/3a88649e176a40a6d80b395ca0ae430d.ttf")
+      format("truetype"),
+    url("//db.onlinewebfonts.com/t/3a88649e176a40a6d80b395ca0ae430d.svg#DIN Next LT Pro Bold")
+      format("svg");
+}
+
+:root {
+  --v-red: #ff4655;
+  --v-white: #ece8e1;
+  --v-black: #0f1923;
+  --v-outline: rgba(236, 232, 225, 0.5);
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-size: 10px;
+  margin: 0;
+  background-color: var(--v-black);
+  color: var(--v-white);
+  font-family: "Valorant";
+  text-rendering: optimizeLegibility;
+}
+
+.button {
+  font-family: "DIN Next LT Pro Bold";
+  font-weight: 400;
+  width: 100%;
+  margin-bottom: 3rem;
+  position: relative;
+  display: block;
+  font-size: 1.9rem;
+  padding: 0.7rem;
+  border: 0;
+  text-transform: uppercase;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--v-white);
+  transition: opacity 0.3s ease;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.button::before,
+.button::after {
+  background-color: transparent;
+  content: "";
+  display: block;
+  position: absolute;
+  height: calc(50% - 0.4rem);
+  width: 100%;
+  border: 1px solid var(--v-outline);
+  left: 0;
+}
+
+.button::before {
+  border-bottom: 0;
+  top: 0;
+}
+
+.button::after {
+  border-top: 0;
+  bottom: 0;
+}
+
+/* LABEL  */
+.label {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+}
+
+.label:before {
+  content: "";
+  height: 100%;
+  display: block;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+
+/* Hover Effect */
+.hover-effect {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 120%;
+  top: 0;
+  left: -5%;
+  z-index: 1;
+  background-color: var(--v-red);
+  transform: translateX(-100%) skew(-10deg);
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+}
+
+.button:hover .hover-effect {
+  transform: translateX(0) skew(-10deg);
+}
+
+/* Label Text */
+.label-text {
+  position: relative;
+  display: block;
+  padding: 1.9rem 3rem;
+  background-color: transparent;
+  z-index: 1;
+}
+
+.label-text:after {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 0.6rem;
+  width: 0.6rem;
+  right: 0;
+  bottom: 0;
+  background-color: var(--v-black);
+  transition: background-color 0.2s ease-in;
+}
+.button:hover .label-text:after {
+  background-color: var(--v-white);
+}
+/* OUTLINE BUTTON */
+.outline {
+  color: var(--v-white);
+}
+
+.outline .label::before,
+.outline .label::after {
+  border: 1px solid var(--v-outline);
+}
+
+/* OUTLINE RED BUTTON */
+.outline + .red {
+  color: var(--v-red);
+}
+
+.outline + .red:hover {
+  color: var(--v-white);
+}
+
+.outline + .red .label::before,
+.outline + .red .label::after {
+  border-color: var(--v-red);
+}
+/* PRIMARY BUTTON */
+.primary {
+  color: var(--v-black);
+}
+
+.primary .label::before {
+  background-color: var(--v-white);
+}
+</style>
+<script>
+var toggleStates = {
+  newDelhi: false,
+  newYork: false,
+  london: false,
+  tokyo: false,
+  paris: false
+};
+
+function showTime(city, timezone) {
+  var options = { timeZone: timezone, hour12: true, hour: 'numeric', minute: 'numeric', second: 'numeric' };
+  var currentTime = new Date().toLocaleString('en-US', options);
+  var button = document.getElementById(city + 'Button');
+
+  if (!toggleStates[city]) {
+    button.textContent = currentTime;
+    toggleStates[city] = true;
+  } else {
+    button.textContent = city.charAt(0).toUpperCase() + city.slice(1);
+    toggleStates[city] = false;
+  }
+}
+</script>
+</head>
+<body>
+<div class="container">
+  <h1>Click the buttons to see the current time in different cities:</h1>
+  <button class="button outline" onclick="showTime('newDelhi', 'Asia/Kolkata')">
+    <span class="label">
+      <span class="label-text">New Delhi</span>
+      <span class="hover-effect"></span>
+    </span>
+  </button>
+  <button class="button outline" onclick="showTime('newYork', 'America/New_York')">
+    <span class="label">
+      <span class="label-text">New York</span>
+      <span class="hover-effect"></span>
+    </span>
+  </button>
+  <button class="button outline" onclick="showTime('london', 'Europe/London')">
+    <span class="label">
+      <span class="label-text">London</span>
+      <span class="hover-effect"></span>
+    </span>
+  </button>
+  <button class="button outline" onclick="showTime('tokyo', 'Asia/Tokyo')">
+    <span class="label">
+      <span class="label-text">Tokyo</span>
+      <span class="hover-effect"></span>
+    </span>
+  </button>
+  <button class="button outline" onclick="showTime('paris', 'Europe/Paris')">
+    <span class="label">
+      <span class="label-text">Paris</span>
+      <span class="hover-effect"></span>
+    </span>
+  </button>
+</div>
+</body>
+</html>
